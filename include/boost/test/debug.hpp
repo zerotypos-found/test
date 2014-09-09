@@ -67,10 +67,8 @@ typedef boost::function<void (dbg_startup_info const&)> dbg_starter;
 
 std::string BOOST_TEST_DECL set_debugger( unit_test::const_string dbg_id, dbg_starter s = dbg_starter() );
 
-// ************************************************************************** //
-// **************    attach debugger to the current process    ************** //
-// ************************************************************************** //
-
+//! Attach debugger to the current process
+//! @param break_or_continue breaks into the debugger if true, continue otherwise
 bool BOOST_TEST_DECL attach_debugger( bool break_or_continue = true );
 
 #endif
