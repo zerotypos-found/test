@@ -936,7 +936,7 @@ system_signal_exception::operator()( unsigned int id, _EXCEPTION_POINTERS* exps 
     }
 
 #ifdef BOOST_TEST_HAS_DEBUG_SUPPORT
-    if( !!m_em->p_auto_start_dbg && debug::attach_debugger( false ) ) {
+    if( m_em->p_auto_start_dbg.get() && debug::attach_debugger( false ) ) {
         m_em->p_catch_system_errors.value = false;
 #if BOOST_WORKAROUND( BOOST_MSVC, <= 1310)
         _set_se_translator( &seh_catch_preventer );
