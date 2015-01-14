@@ -136,7 +136,7 @@ public:
     /// @param[in] tu   test unit being finished
     /// @param[in] elapsed time in milliseconds spend executing this test unit
     /// @see test_unit_start
-    virtual void        test_unit_finish( std::ostream& os, test_unit const& tu, elapsed_t elapsed ) = 0;
+    virtual void        test_unit_finish( std::ostream& os, test_unit const& tu, unit_test::timer::elapsed_t elapsed ) = 0;
 
     /// Invoked if test unit skipped for any reason
 

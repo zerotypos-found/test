@@ -38,7 +38,7 @@ public:
     virtual void    test_aborted() {}
 
     virtual void    test_unit_start( test_unit const& ) {}
-    virtual void    test_unit_finish( test_unit const&, elapsed_t /* elapsed */ ) {}
+    virtual void    test_unit_finish( test_unit const&, unit_test::timer::elapsed_t /* elapsed */ ) {}
     virtual void    test_unit_skipped( test_unit const& ) {}
     virtual void    test_unit_aborted( test_unit const& ) {}
 

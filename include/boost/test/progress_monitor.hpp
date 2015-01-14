@@ -39,7 +39,7 @@ public:
     virtual void    test_start( counter_t test_cases_amount );
     virtual void    test_aborted();
 
-    virtual void    test_unit_finish( test_unit const&, elapsed_t );
+    virtual void    test_unit_finish( test_unit const&, unit_test::timer::elapsed_t );
     virtual void    test_unit_skipped( test_unit const& );
 
     virtual int     priority() { return 3; }

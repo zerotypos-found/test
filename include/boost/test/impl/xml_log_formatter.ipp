@@ -94,10 +94,10 @@ xml_log_formatter::test_unit_start( std::ostream& ostr, test_unit const& tu )
 //____________________________________________________________________________//
 
 void
-xml_log_formatter::test_unit_finish( std::ostream& ostr, test_unit const& tu, elapsed_t elapsed )
+xml_log_formatter::test_unit_finish( std::ostream& ostr, test_unit const& tu, unit_test::timer::elapsed_t elapsed )
 {
     if( tu.p_type == TUT_CASE )
-        ostr << to_xml( elapsed );
+        ostr << unit_test::timer::to_xml( elapsed );
 
     ostr << "</" << tu_type_name( tu ) << ">";
 }
