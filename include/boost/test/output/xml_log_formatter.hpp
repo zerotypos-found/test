@@ -44,7 +44,7 @@ public:
     void    log_build_info( std::ostream& );
 
     void    test_unit_start( std::ostream&, test_unit const& tu );
-    void    test_unit_finish( std::ostream&, test_unit const& tu, elapsed_t elapsed );
+    void    test_unit_finish( std::ostream&, test_unit const& tu, unit_test::timer::elapsed_t elapsed );
     void    test_unit_skipped( std::ostream&, test_unit const& tu );
 
     void    log_exception_start( std::ostream&, log_checkpoint_data const&, execution_exception const& ex );

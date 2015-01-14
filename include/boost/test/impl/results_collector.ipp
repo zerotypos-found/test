@@ -185,7 +185,7 @@ private:
 //____________________________________________________________________________//
 
 void
-results_collector_t::test_unit_finish( test_unit const& tu, elapsed_t )
+results_collector_t::test_unit_finish( test_unit const& tu, unit_test::timer::elapsed_t )
 {
     if( tu.p_type == TUT_SUITE ) {
         results_collect_helper ch( s_rc_impl().m_results_store[tu.p_id], tu );

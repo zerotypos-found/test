@@ -1,20 +1,12 @@
 //  boost progress.hpp header file  ------------------------------------------//
 
-//  Copyright Beman Dawes 1994-99.  Distributed under the Boost
-//  Software License, Version 1.0. (See accompanying file
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  Copyright Beman Dawes 1994-99.  
+  
+//  Distributed under the Boost Software License, Version 1.0.
+//  (See accompanying file LICENSE_1_0.txt or copy at 
+//  http://www.boost.org/LICENSE_1_0.txt)
 
-//  See http://www.boost.org/libs/timer for documentation.
-
-//  Revision History
-//   1 Dec 01  Add leading progress display strings (suggested by Toon Knapen)
-//  20 May 01  Introduce several static_casts<> to eliminate warning messages
-//             (Fixed by Beman, reported by Herve Bronnimann)
-//  12 Jan 01  Change to inline implementation to allow use without library
-//             builds. See docs for more rationale. (Beman Dawes)
-//  22 Jul 99  Name changed to .hpp
-//  16 Jul 99  Second beta
-//   6 Jul 99  Initial boost version
+// Derived from originial implementation in Boost.Timer (now deprecated)
 
 #ifndef BOOST_TEST_UTILS_PROGRESS_DISPLAY_HPP
 #define BOOST_TEST_UTILS_PROGRESS_DISPLAY_HPP
@@ -24,84 +16,78 @@
 #include <string>             // for string
 
 namespace boost {
-
 namespace unit_test {
+namespace timer {
 
-//  progress_display  --------------------------------------------------------//
+class progress_display : private noncopyable {
+public:
+    explicit        progress_display( unsigned long expected_count, std::ostream& os = std::cout )
+    : m_os(os)
+    {
+        restart( expected_count );
+    }
 
-//  progress_display displays an appropriate indication of
-//  progress at an appropriate place in an appropriate form.
+    ///  Effects: display appropriate scale
+    ///  Postconditions: count()==0, expected_count()==expected_count
+    void            restart( unsigned long expected_count )
+    {
+        m_count = m_next_tic_count = m_tic = 0;
+        m_expected_count = expected_count;
 
-// NOTE: (Jan 12, 2001) Tried to change unsigned long to boost::uintmax_t, but
-// found some compilers couldn't handle the required conversion to double.
-// Reverted to unsigned long until the compilers catch up.
+        m_os << "\n0%   10   20   30   40   50   60   70   80   90   100%"
+                "\n|----|----|----|----|----|----|----|----|----|----|"
+             << std::endl;  // endl implies flush, which ensures display
 
-class progress_display : private noncopyable
-{
- public:
-  explicit progress_display( unsigned long expected_count,
-                             std::ostream & os = std::cout,
-                             const std::string & s1 = "\n", //leading strings
-                             const std::string & s2 = "",
-                             const std::string & s3 = "" )
-   // os is hint; implementation may ignore, particularly in embedded systems
-   : m_os(os), m_s1(s1), m_s2(s2), m_s3(s3) { restart(expected_count); }
+        if( !m_expected_count ) 
+            m_expected_count = 1; // prevent divide by zero
+    } // restart
 
-  void           restart( unsigned long expected_count )
-  //  Effects: display appropriate scale
-  //  Postconditions: count()==0, expected_count()==expected_count
-  {
-    _count = _next_tic_count = _tic = 0;
-    _expected_count = expected_count;
+    ///  Effects: Display appropriate progress tic if needed.
+    ///  Postconditions: count()== original count() + increment
+    ///  Returns: count().
+    unsigned long   operator+=( unsigned long increment )
+    {
+        m_count += increment;
+        if( m_count >= m_next_tic_count )
+            display_tic();
 
-    m_os << m_s1 << "0%   10   20   30   40   50   60   70   80   90   100%\n"
-         << m_s2 << "|----|----|----|----|----|----|----|----|----|----|"
-         << std::endl  // endl implies flush, which ensures display
-         << m_s3;
-    if ( !_expected_count ) _expected_count = 1;  // prevent divide by zero
-  } // restart
+        return m_count;
+    }
 
-  unsigned long  operator+=( unsigned long increment )
-  //  Effects: Display appropriate progress tic if needed.
-  //  Postconditions: count()== original count() + increment
-  //  Returns: count().
-  {
-    if ( (_count += increment) >= _next_tic_count ) { display_tic(); }
-    return _count;
-  }
+    unsigned long   operator++()            { return operator+=( 1 ); }
+    unsigned long   count() const           { return m_count; }
+    unsigned long   expected_count() const  { return m_expected_count; }
 
-  unsigned long  operator++()           { return operator+=( 1 ); }
-  unsigned long  count() const          { return _count; }
-  unsigned long  expected_count() const { return _expected_count; }
+private:
+    void            display_tic()
+    {
+        // use of floating point ensures that both large and small counts
+        // work correctly.  static_cast<>() is also used several places
+        // to suppress spurious compiler warnings.
+        unsigned int tics_needed = static_cast<unsigned int>( (static_cast<double>(m_count)/m_expected_count)*50.0 );
+        do { 
+            m_os << '*' << std::flush; 
+        } while ( ++m_tic < tics_needed );
+        
+        m_next_tic_count = static_cast<unsigned long>((m_tic/50.0)*m_expected_count);
+        
+        if( m_count == m_expected_count ) {
+            if( m_tic < 51 )
+                m_os << '*';
+            m_os << std::endl;
+        }
+    } // display_tic
 
-  private:
-  std::ostream &     m_os;  // may not be present in all imps
-  const std::string  m_s1;  // string is more general, safer than
-  const std::string  m_s2;  //  const char *, and efficiency or size are
-  const std::string  m_s3;  //  not issues
-
-  unsigned long _count, _expected_count, _next_tic_count;
-  unsigned int  _tic;
-  void display_tic()
-  {
-    // use of floating point ensures that both large and small counts
-    // work correctly.  static_cast<>() is also used several places
-    // to suppress spurious compiler warnings.
-    unsigned int tics_needed =
-      static_cast<unsigned int>(
-        (static_cast<double>(_count)/_expected_count)*50.0 );
-    do { m_os << '*' << std::flush; } while ( ++_tic < tics_needed );
-    _next_tic_count =
-      static_cast<unsigned long>((_tic/50.0)*_expected_count);
-    if ( _count == _expected_count ) {
-      if ( _tic < 51 ) m_os << '*';
-      m_os << std::endl;
-      }
-  } // display_tic
+    // Data members
+    std::ostream&   m_os;
+    unsigned long   m_count;
+    unsigned long   m_expected_count;
+    unsigned long   m_next_tic_count;
+    unsigned int    m_tic;
 };
 
+} // namespace timer
 } // namespace unit_test
-
 } // namespace boost
 
 #endif  // BOOST_TEST_UTILS_PROGRESS_DISPLAY_HPP

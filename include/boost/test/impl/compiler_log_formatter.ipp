@@ -102,15 +102,15 @@ compiler_log_formatter::test_unit_start( std::ostream& output, test_unit const& 
 //____________________________________________________________________________//
 
 void
-compiler_log_formatter::test_unit_finish( std::ostream& output, test_unit const& tu, elapsed_t elapsed )
+compiler_log_formatter::test_unit_finish( std::ostream& output, test_unit const& tu, unit_test::timer::elapsed_t elapsed )
 {
     BOOST_TEST_SCOPE_SETCOLOR( output, term_attr::BRIGHT, term_color::BLUE );
 
     output << "Leaving test " << tu.p_type_name << " \"" << tu.p_name << "\"";
 
-    if( has_time( elapsed ) ) {
+    if( unit_test::timer::has_time( elapsed ) ) {
         output << "; testing time: ";
-        output << to_string( elapsed );
+        output << unit_test::timer::to_string( elapsed );
     }
 
     output << std::endl;

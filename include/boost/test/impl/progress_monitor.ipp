@@ -45,12 +45,10 @@ namespace {
 
 struct progress_monitor_impl {
     // Constructor
-    progress_monitor_impl()
-        : m_stream( runtime_config::log_sink() )
-    {}
+    progress_monitor_impl() : m_stream( runtime_config::log_sink() ) {}
 
-    std::ostream*                m_stream;
-    scoped_ptr<progress_display> m_progress_display;
+    std::ostream*                                   m_stream;
+    scoped_ptr<unit_test::timer::progress_display>  m_progress_display;
 };
 
 progress_monitor_impl& s_pm_impl() { static progress_monitor_impl the_inst; return the_inst; }
@@ -64,7 +62,7 @@ progress_monitor_t::test_start( counter_t test_cases_amount )
 {
     BOOST_TEST_SCOPE_SETCOLOR( *s_pm_impl().m_stream, term_attr::BRIGHT, term_color::MAGENTA );
 
-    s_pm_impl().m_progress_display.reset( new progress_display( test_cases_amount, *s_pm_impl().m_stream ) );
+    s_pm_impl().m_progress_display.reset( new unit_test::timer::progress_display( test_cases_amount, *s_pm_impl().m_stream ) );
 }
 
 //____________________________________________________________________________//
@@ -80,7 +78,7 @@ progress_monitor_t::test_aborted()
 //____________________________________________________________________________//
 
 void
-progress_monitor_t::test_unit_finish( test_unit const& tu, elapsed_t )
+progress_monitor_t::test_unit_finish( test_unit const& tu, unit_test::timer::elapsed_t )
 {
     BOOST_TEST_SCOPE_SETCOLOR( *s_pm_impl().m_stream, term_attr::BRIGHT, term_color::MAGENTA );
 

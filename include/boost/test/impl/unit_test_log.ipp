@@ -179,7 +179,7 @@ unit_test_log_t::test_unit_start( test_unit const& tu )
 //____________________________________________________________________________//
 
 void
-unit_test_log_t::test_unit_finish( test_unit const& tu, elapsed_t elapsed )
+unit_test_log_t::test_unit_finish( test_unit const& tu, unit_test::timer::elapsed_t elapsed )
 {
     if( s_log_impl().m_threshold_level > log_test_units )
         return;
