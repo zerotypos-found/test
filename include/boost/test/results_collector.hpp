@@ -5,9 +5,10 @@
 
 //  See http://www.boost.org/libs/test for the library home page.
 //
-/// @file results_collector.hpp @brief defines testing result collector components
+/// @file
+/// @brief defines testing result collector components
 ///
-/// Defines class results_collector_t that is responsible for 
+/// Defines class @ref results_collector_t that is responsible for 
 /// gathering test results and class test_results for presenting this information to end-user
 // ***************************************************************************
 

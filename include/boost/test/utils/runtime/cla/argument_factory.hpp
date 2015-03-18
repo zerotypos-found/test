@@ -5,11 +5,8 @@
 
 //  See http://www.boost.org/libs/test for the library home page.
 //
-//  File        : $RCSfile$
-//
-//  Version     : $Revision$
-//
-//  Description : generic typed_argument_factory implementation
+/// @file
+/// Generic typed_argument_factory implementation
 // ***************************************************************************
 
 #ifndef BOOST_RT_CLA_ARGUMENT_FACTORY_HPP_062604GER

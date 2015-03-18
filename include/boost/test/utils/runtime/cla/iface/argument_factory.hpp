@@ -5,11 +5,8 @@
 
 //  See http://www.boost.org/libs/test for the library home page.
 //
-//  File        : $RCSfile$
-//
-//  Version     : $Revision$
-//
-//  Description : defines interface for argument_factory
+/// @file
+/// Defines interface for argument_factory
 // ***************************************************************************
 
 #ifndef BOOST_RT_CLA_IFACE_ARGUMENT_FACTORY_HPP_062604GER
