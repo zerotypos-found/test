@@ -385,7 +385,8 @@ BOOST_AUTO_TEST_CASE( test_objects )
         NC nc1;
         NC nc2;
 
-        EXPR_TYPE( E_under_test, nc1 == nc2 );
+        EXPR_TYPE( E_under_test, nc1 == nc2 ); // nc1 is not an rvalue
+        //EXPR_TYPE( E_under_test, NC() == nc2 );
         predicate_result const& res = E_under_test.evaluate();
         BOOST_TEST( !res );
         BOOST_TEST( res.message() == " [NC != NC]" );
