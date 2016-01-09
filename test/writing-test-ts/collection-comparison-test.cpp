@@ -141,4 +141,40 @@ BOOST_AUTO_TEST_CASE( test_collection_of_collection_comp )
     BOOST_TEST( std::string("abc") == std::string("abc") );
 }
 
+
+// example from trac 11625
+// https://svn.boost.org/trac/boost/ticket/11625
+
+struct my_class final {
+    std::vector<int> the_ints = { 1, 2, 3 };
+
+    using const_iterator = std::vector<int>::const_iterator;
+    using value_type = std::vector<int>::value_type;
+
+    const_iterator begin() const
+    {
+        return std::begin( the_ints );
+    }
+    const_iterator end() const
+    {
+        return std::end( the_ints );
+    }
+
+    std::vector<int>::size_type size() const
+    {
+      return the_ints.size();
+    }
+};
+
+//BOOST_TEST_SPECIALIZED_COLLECTION_COMPARE(my_class);
+
+BOOST_AUTO_TEST_CASE( comp_by_elem )
+{
+     const my_class         a{};
+     const std::vector<int> b = { 1, 2, 3 };
+     BOOST_TEST( a == b, boost::test_tools::per_element() );
+}
+
+
+
 // EOF
