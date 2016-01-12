@@ -874,4 +874,20 @@ BOOST_AUTO_TEST_CASE( test_precision_mutation, * ut::expected_failures( 1 ) )
     BOOST_TEST( initial_precition == std::cout.precision() );
 }
 
+//____________________________________________________________________________//
+
+struct rv_erasure_test {
+    rv_erasure_test() : value( 1 ) {}
+    ~rv_erasure_test() { value = 0; }
+
+    int value;
+};
+
+BOOST_AUTO_TEST_CASE( test_rvalue_erasure )
+{
+    auto erase_rv = []( rv_erasure_test const& arg ) -> rv_erasure_test const& { return arg; };
+
+    BOOST_TEST( 1 == erase_rv( rv_erasure_test{} ).value );
+}
+
 // EOF
